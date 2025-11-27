@@ -1,46 +1,43 @@
-name: Build PHAR
+name: Build PHAR and Release
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    tags:
+      - 'v*.*.*'
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout your repo
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # 2. Set up PHP
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
           extensions: phar
 
-      # 3. Install Composer dependencies (if you have any)
-      - name: Install dependencies
-        run: composer install --no-dev --prefer-dist || echo "No composer dependencies"
-
-      # 4. Build PHAR
       - name: Build PHAR
         run: |
-          mkdir -p build
           php -d phar.readonly=0 -r "
-          \$phar = new Phar('build/BedrockTPA.phar');
+          \$phar = new Phar('BedrockTPA.phar');
           \$phar->startBuffering();
           \$phar->buildFromDirectory('src');
           \$phar->setStub(\$phar->createDefaultStub('MintDino/BedrockTPA/Main.php'));
           \$phar->stopBuffering();
           "
 
-      # 5. Upload PHAR as artifact
-      - name: Upload PHAR
-        uses: actions/upload-artifact@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: BedrockTPA-phar
-          path: build/BedrockTPA.phar
+          tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload PHAR to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: BedrockTPA.phar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
