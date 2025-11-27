@@ -1,0 +1,15 @@
+name: BedrockTPA
+main: MintDino\BedrockTPA\main
+version: 1.0.0
+api: 5.0.0
+author: MintDino
+description: Simple and reliable TPA system for PocketMine-MP
+
+commands:
+  tpa:
+    description: Send a teleport request
+    usage: "/tpa <player>"
+  tpaccept:
+    description: Accept teleport request
+  tpdeny:
+    description: Deny teleport request
