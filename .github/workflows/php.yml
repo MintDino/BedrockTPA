@@ -22,26 +22,25 @@ jobs:
           php-version: '8.2'
           extensions: phar
 
-      # 3. Install Composer (if needed)
+      # 3. Install Composer dependencies (if you have any)
       - name: Install dependencies
-        run: composer install --no-dev --prefer-dist
+        run: composer install --no-dev --prefer-dist || echo "No composer dependencies"
 
       # 4. Build PHAR
       - name: Build PHAR
         run: |
           mkdir -p build
           php -d phar.readonly=0 -r "
-            \$phar = new Phar('build/BedrockTPA.phar');
-            \$phar->startBuffering();
-            \$phar->buildFromDirectory('src');
-            \$phar->setStub(\$phar->createDefaultStub('MintDino/BedrockTPA/Main.php'));
-            \$phar->stopBuffering();
+          \$phar = new Phar('build/BedrockTPA.phar');
+          \$phar->startBuffering();
+          \$phar->buildFromDirectory('src');
+          \$phar->setStub(\$phar->createDefaultStub('MintDino/BedrockTPA/Main.php'));
+          \$phar->stopBuffering();
           "
 
       # 5. Upload PHAR as artifact
       - name: Upload PHAR
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: BedrockTPA-phar
           path: build/BedrockTPA.phar
-          
