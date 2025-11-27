@@ -1,0 +1,12 @@
+request-timeout: 30
+cooldown: 20
+
+messages:
+  request-sent: "§aTPA request sent to §e{player}§a."
+  request-received: "§e{player}§a wants to teleport to you. Use §e/tpaccept §aor §e/tpdeny§a."
+  accepted: "§aTeleport request accepted."
+  denied: "§cTeleport request denied."
+  no-request: "§cNo pending TPA request."
+  on-cooldown: "§cYou must wait {seconds} seconds before sending another TPA."
+  timed-out: "§cYour TPA request expired."
+  
